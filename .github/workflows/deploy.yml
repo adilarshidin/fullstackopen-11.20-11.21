@@ -1,0 +1,13 @@
+name: Deployment pipeline
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deployment_pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: render deploy
+        if: ${{ github.event_name == 'push' }}
+        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}

@@ -1,0 +1,27 @@
+name: Check pipeline
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+
+jobs:
+  lint_and_build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "10.15.3"
+      - name: install dependencies
+        run: npm install
+      - name: reinstall deprecated core-js & regenerator-runtime
+        run: npm install --save core-js regenerator-runtime
+      - name: reinstall deprecated @babel packages
+        run: npm install --save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader
+      - name: remove cache
+        run: rm -rf node_modules/.cache
+      - name: lint
+        run: npm run lint
+      - name: build
+        run: npm run build
